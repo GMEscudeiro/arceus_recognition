@@ -29,7 +29,7 @@ class CameraSubscriber(Node):
             'color/image_raw',
             self.camera_callback,
             10)
-        self._subscriber_color_camera_raw
+        self._subscriber_color_camera_raw # avoid unused variable warning
 
         self.yolov8_pub = self.create_publisher(Yolov8Inference, "/Yolov8_Inference", 1)
         self.img_pub = self.create_publisher(Image, "/inference_result", 1)

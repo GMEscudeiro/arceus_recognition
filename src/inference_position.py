@@ -33,7 +33,8 @@ class InferencePositionCalc(Node):
         self.person_goal.pose.orientation.y = 0.0
         self.person_goal.pose.orientation.z = 0.0
         self.person_goal.pose.orientation.w = 1.0
-
+        
+        # realsense intrinsics values from camera_info topic
         self.intrinsics = rs2.intrinsics()
         self.intrinsics.width = 1280
         self.intrinsics.height = 720
@@ -49,14 +50,14 @@ class InferencePositionCalc(Node):
             '/Yolov8_Inference',
             self.inference_result_callback,
             10)
-        self._subscriber_inference_result
+        self._subscriber_inference_result # avoid unused variable warning
 
         self._subscriber_depth_camera_raw = self.create_subscription(
             Image,
             'depth/image_raw',
             self.image_depth_callback,
             10)
-        self._subscriber_depth_camera_raw
+        self._subscriber_depth_camera_raw # avoid unused variable warning
 
         self.inference_pos_pub = self.create_publisher(InferencePosition, "/inference_position", 1)
         self.person_goal_pub = self.create_publisher(PoseStamped, "/person_goal", 1)
@@ -80,12 +81,15 @@ class InferencePositionCalc(Node):
                         self.person_goal_pub.publish(self.person_goal)
 
                     self.inference_pos_pub.publish(self.inference_position)
+
         except CvBridgeError as e:
             print(e)
             return
         except ValueError as e:
+            print(e)
             return
         
+    # gets inference center    
     def inference_result_callback(self, data): 
         self.inferences_center.clear()
         for i in data.yolov8_inference:
